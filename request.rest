@@ -1,0 +1,29 @@
+GET http://localhost:4000/posts
+
+###
+
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "username" : "Alex"
+}
+
+###
+
+GET http://localhost:5000/ranking
+
+###
+
+GET http://localhost:5000/following
+
+###
+
+GET http://localhost:5000/trending_tags
+
+###
+
+GET http://localhost:5000/get_related_posts
+
+###
+

@@ -1,0 +1,35 @@
+{
+    "illust": {
+        "id": 97836046,
+        "title": "「ふふふ、いい匂いがする！」",
+        "thumb_link": "https://i.pximg.net/c/540x540_10_webp/img-master/img/2022/04/24/03/24/27/97836046_p0_square1200.jpg",
+        "thumb_url": "https://cdn.discordapp.com/attachments/901165194275852348/967899567871889488/97857005_p0_square1200.jpg",
+        "pages": 1,
+        "meta_single_page": {
+            "page_link": "https://i.pximg.net/c/600x1200_90_webp/img-master/img/2022/04/24/03/24/27/97836046_p0_master1200.jpg",
+            "page_url": "https://cdn.discordapp.com/attachments/843911307572936704/967495482769309787/97836046_p0_master1200.jpg"
+        },
+        "meta_pages": [{
+            "page_link": "habrá meta pages solo si pages es mayor que 1",
+            "page_url": "habrá meta pages solo si pages es mayor que 1"
+        }],
+        "date_publish": "2022-04-24",
+        "views": 1686,
+        "favs": 830,
+        "author": {
+            "author_id": 67339509,
+            "author_name": "ねむげそ",
+            "thumb_url": "https://cdn.discordapp.com/attachments/900838104917766165/967900956127797258/no_profile.png",
+            "followers": 100
+        },
+        "tags": [{
+                "tag_name": "ロキシー・ミグルディア",
+                "tag_trad": "Roxy Migurdia"
+            },
+            {
+                "tag_name": "無職転生",
+                "tag_trad": "Mushoku Tensei"
+            }
+        ]
+    }
+}
