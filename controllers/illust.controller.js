@@ -1,23 +1,14 @@
-const conex = require('../config/connection.js');
-const dataFuntioncs = require('../middlewares/functions');
 const controller = {}
-
+const use_DB = require('../config/connectionPool');
 // consulta para obtener illust
-
 /*
     SQL
-    
     'consultas separadas para evitar inner join'
-
     X = ID de ilustración
-
     -> Obtener ilustracion (aunque ya la tengamos, no se si se deba ejecutar)
-  
     -> Obtener etiquetas de ilustración
-      
 
     example: https://cdn.discordapp.com/attachments/829406711914954802/975057280573780088/unknown.png
-
     -> Obtener paginas de la ilustración  
     select * from pages where illust_id = 97836046;
     example: https://cdn.discordapp.com/attachments/829406711914954802/975058004862984222/unknown.png
@@ -30,40 +21,43 @@ const controller = {}
     example: https://cdn.discordapp.com/attachments/829406711914954802/975058581747564564/unknown.png
 */
 
+//Method
 controller.getIllust = async (req, res) => {
-    const id = req.params.illust_id;
+
+    const {id}= req.params.illust_id;
     let illust_object = [];
+
     try {
-        await conex.query(`select illust_id, i_author_id, title, thumb_link, thumb_url, publish_date, views, favorites, relateds from illusts where illust_id = ${id}`, async (err, rows) => {
-            if (err) throw err.message;
-            illust_object.push(rows);
-            //console.log(rows)
+        const pool = await use_DB.createPoolAndCon();
+        console.log(typeof pool);
 
-            await conex.query(`select tags.tag_name, tags.tag_trad from tags_illusts inner join tags on tags.tag_name = tags_illusts.tag_name where tags_illusts.i_id = ${id}`, (err, rowsTags) => {
-                if (err) throw err.message;
-                illust_object.push(rowsTags);             //   console.log(rowsTags)
+        const stmt = `select illust_id, i_author_id, title, thumb_link, thumb_url, publish_date, views, favorites, relateds from illusts where illust_id = ?`;
+        const stame2 = 'select * from illusts'
+        // const illustparam = id;
+        const illustquery = pool.query(stmt, [id]);
+        const ilusst = pool.query(stame2, []);
 
-                // res.json(rowsTags);
+        const illustdata = await illustquery;
+        const illustdata2 = await ilusst;
 
-            })
-            //res.json(rows);
+        // res.json(illustdata[0]);
+        illust_object.push(illustdata[0], illustdata2[0]);
+        console.log(illust_object);
 
-            await conex.query(`select * from pages where illust_id= ${id}`, (err, rowsPages) => {
-                if (err) throw err.message;
-                console.log(rowsPages)
+        res.json(illust_object);
 
-                illust_object.push(rowsPages);
-            })
-            res.json(illust_object);
-            console.log(illust_object)
-
-        })
-
-
-        
     } catch (error) {
         console.log(error.message)
     }
+}
+
+controller.addIllust = async (req, res) => {
+}
+
+controller.deleteIllust = async (req, res) => {
+}
+
+controller.editIllust = async (req, res) => {
 }
 
 module.exports = controller;

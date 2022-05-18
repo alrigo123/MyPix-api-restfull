@@ -1,4 +1,4 @@
-const conex = require('../config/connection.js');
+
 const dataFunctions = require('../middlewares/functions')
 
 const controller = {}

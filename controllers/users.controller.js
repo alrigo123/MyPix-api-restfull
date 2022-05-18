@@ -4,6 +4,7 @@ const controller = {}
 
 const ids = []
 
+//cambiar tambien este tipo de code
 controller.getAuthors = async (req, res) => {
 
     try {
