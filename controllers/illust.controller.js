@@ -47,7 +47,7 @@ controller.getIllust = async (req, res) => {
         res.json(illust_object);
 
     } catch (error) {
-        console.log(error.message)
+        throw `Error catching => ${error.message}`
     }
 }
 

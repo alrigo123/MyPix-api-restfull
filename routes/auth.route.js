@@ -6,15 +6,11 @@ route.get('/login', (req, res) => {
     res.send('login');
 });
 
-route.post('/login', (req, res) => {
-    res.send('login');
-})
+route.post('/login', Auth_Controller.login);
 route.get('/register', (req, res) => {
     res.send('register');
 })
-route.post('/register', (req, res) => {
-    res.send('register');
-});
+route.post('/register', Auth_Controller.register);
 
 module.exports = route;
 
