@@ -22,6 +22,8 @@ const use_DB = require('../config/connectionPool');
 */
 
 //Method
+
+//Este vendria a ser searchIllust
 controller.getIllust = async (req, res) => {
 
     const {id}= req.params.illust_id;
@@ -51,13 +53,32 @@ controller.getIllust = async (req, res) => {
     }
 }
 
-controller.addIllust = async (req, res) => {
+controller.searchIllust = async (req, res) => {
+    ///Me imagino que esta sera una consulta combinada(tags,pages,etc) a diferencia de la anterior que solo busca la base de los arhivos
 }
 
-controller.deleteIllust = async (req, res) => {
+controller.illustRankig = async (req, res) => {
 }
 
-controller.editIllust = async (req, res) => {
+controller.trendingTagsIllust = async (req, res) => {
 }
+
+/* Ambos operaciones la realizamos con la base de datos el de agregar y el de eliminar */
+//ADD bookmarks
+controller.bookmarkIllust= async (req, res) => {
+}
+
+// DELETE bookmarks
+controller.un_bookmarkIllust = async (req, res) => {
+}
+
+//obtener los comentarios de una illust
+controller.getIllustComments = async (req, res) => {
+}
+
+// obtener los relateds de una illust
+controller.illustRelateds = async (req,res) => {
+}
+
 
 module.exports = controller;

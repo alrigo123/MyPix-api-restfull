@@ -3,7 +3,6 @@ const dataFunctions = require('../middlewares/functions')
 const controller = {}
 
 
-//cambiar tambien este tipo de code
 controller.getAuthors = async (req, res) => {
     const ids = []
 
@@ -35,9 +34,28 @@ controller.getAuthors = async (req, res) => {
     }
 }
 
-
 controller.followArtist = async (req, res) => {
-
 }
+
+controller.illustRecommended = async (req, res) => {
+}
+
+controller.userBookmarksIllust = async (req, res) => {  // podria ser getFavoriteIllust IDK - subject to discussion
+}
+
+//ADD and DELETE follow
+controller.followUser= async (req, res) => {
+}
+
+controller.un_followUser = async (req, res) => {
+}
+
+controller.usersFollowing = async (req, res) => { 
+}
+
+//obtener las ilustraciones de un autor
+controller.getIllustFromAuthor = async (req, res) => {
+}
+
 
 module.exports = controller;
