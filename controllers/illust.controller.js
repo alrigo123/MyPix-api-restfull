@@ -1,84 +1,100 @@
 const controller = {}
-const use_DB = require('../config/connectionPool');
-// consulta para obtener illust
-/*
-    SQL
-    'consultas separadas para evitar inner join'
-    X = ID de ilustración
-    -> Obtener ilustracion (aunque ya la tengamos, no se si se deba ejecutar)
-    -> Obtener etiquetas de ilustración
-
-    example: https://cdn.discordapp.com/attachments/829406711914954802/975057280573780088/unknown.png
-    -> Obtener paginas de la ilustración  
-    select * from pages where illust_id = 97836046;
-    example: https://cdn.discordapp.com/attachments/829406711914954802/975058004862984222/unknown.png
-
-    -> Obtener relacionados (esta sería la consulta mas compleja al momento) aka self join
-    select tag_a.i_id, tag_b.tag_name from tags_illusts tag_a
-       join tags_illusts tag_b on tag_b.i_id = tag_a.i_id
-       where tag_a.tag_name = 'オリジナル' <- taG_name 1 de la ilustracion
-       and   tag_b.tag_name = '創作'; <- tag_name 2 de la ilustración
-    example: https://cdn.discordapp.com/attachments/829406711914954802/975058581747564564/unknown.png
-*/
+const use_DB = require('../config/connectionPool')
+const mysql = require('mysql2/promise')
 
 //Method
 
-//Este vendria a ser searchIllust
-controller.getIllust = async (req, res) => {
 
-    const {id}= req.params.illust_id;
-    let illust_object = [];
+
+controller.getIllust = async (req, res, next) => {
+    const id = req.params.illust_id
 
     try {
-        const pool = await use_DB.createPoolAndCon();
-        console.log(typeof pool);
 
-        const stmt = `select illust_id, i_author_id, title, thumb_link, thumb_url, publish_date, views, favorites, relateds from illusts where illust_id = ?`;
-        const stame2 = 'select * from illusts'
-        // const illustparam = id;
-        const illustquery = pool.query(stmt, [id]);
-        const ilusst = pool.query(stame2, []);
+        const createTcpPool = async () => {
+            return await mysql.createPool({
+                user: 'root',
+                password: '',
+                database: 'appandroid',
+                host: 'localhost',
+                port: '3306',
+                socketPath: '',
+            });
+        };
 
-        const illustdata = await illustquery;
-        const illustdata2 = await ilusst;
+        const createPoolAndConn = async () => {
+            await createTcpPool()
+                .then(console.log('Conectado a BD'))
+                .catch((err) => {
+                    console.log(err)
+                });
+        };
 
-        // res.json(illustdata[0]);
-        illust_object.push(illustdata[0], illustdata2[0]);
-        console.log(illust_object);
+            const pool = await createPoolAndConn();
+            console.log(typeof pool);
+            
+        // illust info
+        const stmt = `select * from illusts where illust_id = ?`
+        const illustquery = pool.query(stmt, [id])
+        const illustdata = await illustquery
+        // tags info
+        const illust_id = illustdata[0][0].illust_id
+        console.log(illust_id)
+        const tags_stmt =
+            'select ti.tag_name, t.tag_trad from tags_illusts ti inner join tags t on t.tag_name = ti.tag_name where ti.i_id = ?'
+        const tags_query = pool.query(tags_stmt, [illust_id])
+        const tagsdata = await tags_query
+        // pages info
+        const pages_stmt = 'select * from pages where illust_id = ?'
+        const pages_query = pool.query(pages_stmt, [illust_id])
+        const pagesdata = await pages_query
 
-        res.json(illust_object);
+        // joining data
+        illustdata[0][0].tags = tagsdata[0]
+        illustdata[0][0].pages = pagesdata[0]
+        res.json(illustdata[0][0])
+        //  const algo = Object.assign({},{obj},{tags,meta_single_page});
 
+        // console.log(illust_object);
+
+        //res.json(illust_object);
     } catch (error) {
-        throw `Error catching => ${error.message}`
+        console.log(error)
     }
 }
 
 controller.searchIllust = async (req, res) => {
     ///Me imagino que esta sera una consulta combinada(tags,pages,etc) a diferencia de la anterior que solo busca la base de los arhivos
+    const searchword = req.params.searchword
+    let illust_arrays = []
+    try {} catch (error) {
+        next(error)
+    }
 }
 
-controller.illustRankig = async (req, res) => {
+controller.showIllust = async (req, res) => {
+    res.redirect(`/img/${req.params.folder}/illusts/${req.params.file}`)
 }
 
-controller.trendingTagsIllust = async (req, res) => {
+controller.showThumbs = async (req, res) => {
+    res.redirect(`/img/${req.params.folder}/thumbs/${req.params.file}`)
 }
+
+controller.illustRankig = async (req, res) => {}
+
+controller.trendingTagsIllust = async (req, res) => {}
 
 /* Ambos operaciones la realizamos con la base de datos el de agregar y el de eliminar */
 //ADD bookmarks
-controller.bookmarkIllust= async (req, res) => {
-}
+controller.bookmarkIllust = async (req, res) => {}
 
 // DELETE bookmarks
-controller.un_bookmarkIllust = async (req, res) => {
-}
+controller.un_bookmarkIllust = async (req, res) => {}
 
 //obtener los comentarios de una illust
-controller.getIllustComments = async (req, res) => {
-}
+controller.getIllustComments = async (req, res) => {}
 
 // obtener los relateds de una illust
-controller.illustRelateds = async (req,res) => {
-}
+controller.illustRelateds = async (req, res) => {}
 
-
-module.exports = controller;
+module.exports = controller

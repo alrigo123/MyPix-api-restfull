@@ -3,14 +3,30 @@ const illust_Controller = require('../controllers/illust.controller')
 const route = express.Router();
 
 //para obtener un illust con su Id que seria lo mismo que buscar
+route.get('/getIllust/:illust_id', illust_Controller.getIllust);
 route.get('/:illust_id', illust_Controller.getIllust);
-route.get('/:illust_id', illust_Controller.searchIllust);
+//http://192.168.1.4:5000/illust/ 97836046
+
+route.get('/searchIllust/:searchword', illust_Controller.searchIllust);
+//http://192.168.1.4:5000/illust/ anime
+
+//mostrar imagen illust
+route.get('/images/:folder/illusts/:file',illust_Controller.showIllust)
+
+//mostrar thumbs
+route.get('/images/:folder/thumbs/:file',illust_Controller.showThumbs)
+
+
+route.get('/mostrarImagen',(req, res)=>{
+res.render('image')
+})
+
 
 //Illust Ranking (supongo que no se le pasa parametros solo una consulta en general donde en el query estara order by......)
 route.get('/illustRanking', illust_Controller.illustRankig);
 
 //Illust trending tags
-route.get('/illustTrendingTags', illust_Controller.illustTrendingTags);
+route.get('/illustTrendingTags', illust_Controller.trendingTagsIllust);
 
 //Bookmarks functions
 route.get('/addBookmark/:(ID RESPECTIVO)', illust_Controller.bookmarkIllust); //este deberia ser con post pero necesito la explicacion si existe un "btnSumbit"
