@@ -23,7 +23,7 @@ GET http://localhost:5000/trending_tags
 
 ###
 
-GET http://localhost:5000/get_related_posts
+GET http://192.168.1.4:5000/illust/getIllust/97836046
 
 ###
 

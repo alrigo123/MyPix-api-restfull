@@ -4,7 +4,6 @@ const route = express.Router();
 
 //para obtener un illust con su Id que seria lo mismo que buscar
 route.get('/getIllust/:illust_id', illust_Controller.getIllust);
-route.get('/:illust_id', illust_Controller.getIllust);
 //http://192.168.1.4:5000/illust/ 97836046
 
 route.get('/searchIllust/:searchword', illust_Controller.searchIllust);
@@ -23,20 +22,20 @@ res.render('image')
 
 
 //Illust Ranking (supongo que no se le pasa parametros solo una consulta en general donde en el query estara order by......)
-route.get('/illustRanking', illust_Controller.illustRankig);
+route.get('/illustRanking', illust_Controller.illustRanking);
 
 //Illust trending tags
 route.get('/illustTrendingTags', illust_Controller.trendingTagsIllust);
 
 //Bookmarks functions
-route.get('/addBookmark/:(ID RESPECTIVO)', illust_Controller.bookmarkIllust); //este deberia ser con post pero necesito la explicacion si existe un "btnSumbit"
-route.get('/deleteBookmark/:(ID RESPECTIVO)', illust_Controller.un_bookmarkIllust);
+route.get('/addBookmark/:illust_id/:user_id', illust_Controller.bookmarkIllust); //este deberia ser con post pero necesito la explicacion si existe un "btnSumbit"
+route.get('/deleteBookmark/:illust_id/:user_id', illust_Controller.un_bookmarkIllust);
 
 // obtener los comentarios de una illust --- illustComments
-route.get('/getIllustComments/:(ID RESPECTIVO)',illust_Controller.getIllustComments);
+route.get('/getIllustComments/:illust_id',illust_Controller.getIllustComments);
 
 //obtener los relateds de una illust
-route.get('/illustRelated/:(ID RESPECTIVO)',illust_Controller.illustRelateds)
+route.get('/illustRelated/:illust_id',illust_Controller.illustRelateds)
 
 module.exports = route;
 

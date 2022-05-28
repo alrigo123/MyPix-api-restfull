@@ -1,28 +1,17 @@
 const { database } = require('./keys');
 const mysql = require('mysql2/promise');
 
-const createTcpPool = async () => {
-    return await mysql.createPool({
+const pool = mysql.createPool({
         user: 'root',
         password: '',
         database: 'appandroid',
-        host: 'localhost',
-        port: "3306",
-        socketPath: ""
-    });
-};
+        host: 'localhost'
+});
 
-const createPoolAndConn = async () =>
-    await createTcpPool()
-        .then(
-            console.log("Conectado a BD")
-        )
-        .catch((err) => {
-            console.log(err);
+pool.getConnection((err,connection) =>{
+    if(err)   throw err;
+    console.log('Database connected successfully');
+    connection.release();
+})
 
-        });
-
-async function connectbd() {
-    await createPoolAndConn();
-}
-module.exports = connectbd;
+module.exports = pool;
