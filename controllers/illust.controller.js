@@ -89,7 +89,7 @@ controller.illustRanking = async (req, res) => {
         for (let i = 0; i < 5; i++) {
             ranking_arr.push(illustdata[0][i])
         }
-        res.json(ranking_arr)
+        res.json({ranking : ranking_arr})
     } catch (error) {
         console.log('este: ', error.message)
     }
