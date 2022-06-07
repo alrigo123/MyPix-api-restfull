@@ -9,7 +9,6 @@ controller.getIllust = async (req, res, next) => {
 
     try {
         const pool = await use_DB
-        console.log(typeof pool)
 
         // illust info
         const stmt = `select * from illusts where illust_id = ?`
@@ -101,6 +100,14 @@ controller.trendingTagsIllust = async (req, res) => {
         const pool = await use_DB
         const stmt = `select * from tags order by tag_count desc limit 10`
         const query = await pool.query(stmt)
+        for (let i = 0; i < query[0].length; i++) {
+            const get_id_stmt = 'select * from tags_illusts where tag_name = ?'
+            const get_id_query = await pool.query(get_id_stmt, [query[0][i].tag_name])
+            
+            const get_img_stmt = 'select thumb_url from illusts where illust_id = ?'
+            const get_img_query = await pool.query(get_img_stmt, [get_id_query[0][0].i_id])
+            query[0][i].img = get_img_query[0][0].thumb_url
+        }
         res.json(query[0])
     } catch (error) {
         console.log(error.message)
@@ -167,13 +174,17 @@ controller.illustRelateds = async (req, res) => {
             const related_id_query = await pool.query(related_id_stmt, [tags_arr[i].tag_name, tags_arr[i + 1].tag_name])
             const related_id_data = await related_id_query
             for (let j = 0; j < related_id_data[0].length; j++) {
-                // comprobando si el id ya esta en el array
-                if (!related_ids_arr.includes(related_id_data[0][j].i_id)) {
-                    related_ids_arr.push(related_id_data[0][j].i_id)
+                // if que evita que se agregue a si mismo
+                if (related_id_data[0][j].i_id != illust_id) {
+                    // comprobando si el id ya esta en el array
+                    if (!related_ids_arr.includes(related_id_data[0][j].i_id)) {
+                        related_ids_arr.push(related_id_data[0][j].i_id)
+                    }
                 }
             }
         }
-        for(let i = 0; i < related_ids_arr.length; i++){
+
+        for (let i = 0; i < related_ids_arr.length; i++) {
             const illust_rel_query = "select * from illusts where illust_id = ?"
             const illust_rel_data = await pool.query(illust_rel_query, [related_ids_arr[i]])
             related_ids_arr[i] = illust_rel_data[0][0]

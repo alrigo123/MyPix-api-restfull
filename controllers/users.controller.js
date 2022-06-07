@@ -45,15 +45,64 @@ controller.followArtist = async (req, res) => {
             message: 'Successfully followed artist'
         })
     } catch (error) {
-        throw `Error catching => ${error.message}`
         res.json({
             message: 'Error following artist'
         })
+        throw `Error catching => ${error.message}`
+
     }
 }
 
 controller.illustRecommended = async (req, res) => {
-    
+    // artistas recomendados para el usuario
+    const user_id = req.params.user_id
+
+    const pool = await use_DB
+    try {
+        //obteniendo follows actuales del usuario
+        const stmt = 'select * from author_follow where follower_id = ?'
+        const query = await pool.query(stmt, [user_id])
+        const author_stmt = 'select * from author'
+        const author_query = await pool.query(author_stmt)
+        const recommendedartists = []
+        for (i = 0; i < author_query[0].length; i++) {
+            if (recommendedartists.length == 10) {
+                break
+            }
+            if (author_query[0][i].author_id != user_id) {
+                let is_in_follows = false
+                for (j = 0; j < query[0].length; j++) {
+                    if (author_query[0][i].author_id == query[0][j].author_id) {
+                        is_in_follows = true
+                    }
+                }
+                if (!is_in_follows) {
+                    recommendedartists.push(author_query[0][i])
+                }
+            }
+        }
+        for (i = 0; i < recommendedartists.length; i++) {
+            const illust_stmt = 'select * from illusts where i_author_id = ?'
+            const illust_query = await pool.query(illust_stmt, [
+                recommendedartists[i].author_id
+            ])
+            let author_illusts = []
+            for (j = 0; j < illust_query[0].length; j++) {
+                if (j == 4) {
+                    break
+                }
+                author_illusts.push(illust_query[0][j])
+            }
+            recommendedartists[i].illusts = author_illusts
+        }
+        res.json(recommendedartists)
+    } catch (error) {
+        res.json({
+            message: 'Error With recommended'
+        })
+        throw `Error catching => ${error.message}`
+    }
+
 }
 
 controller.userBookmarksIllust = async (req, res) => {
