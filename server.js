@@ -10,7 +10,6 @@ const auth_Route = require('./routes/authorization.route')
 const illust_Route = require('./routes/illust.route')
 const user_Route = require('./routes/users.route')
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
